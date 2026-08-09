@@ -22,10 +22,10 @@ install: $(PRGS)
 arp: arp.o $(TINYPRINTF)
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-ftp: ftp.o
+ftp: ftp.o $(TINYPRINTF)
 	$(LD) $(LDFLAGS) -maout-stack=6144 -maout-heap=4096 -o $@ $^ $(LDLIBS)
 
-ftpd: ftpd.o
+ftpd: ftpd.o $(TINYPRINTF)
 	$(LD) $(LDFLAGS) -maout-stack=4096 -maout-heap=4096 -o $@ $^ $(LDLIBS)
 
 httpd: httpd.o $(TINYPRINTF)
@@ -37,7 +37,7 @@ netcat: netcat.o $(TINYPRINTF)
 netstat: netstat.o $(TINYPRINTF)
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-nslookup: nslookup.o
+nslookup: nslookup.o $(TINYPRINTF)
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 ping: ping.o $(TINYPRINTF)
@@ -64,7 +64,7 @@ curl: curl.o $(TINYPRINTF)
 urlget: urlget.o $(TINYPRINTF)
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-tinyirc/tinyirc: tinyirc/tinyirc.o
+tinyirc/tinyirc: tinyirc/tinyirc.o $(TINYPRINTF)
 	$(LD) $(LDFLAGS) -maout-heap=8192 -o $@ $^ $(LDLIBS)
 
 clean:
