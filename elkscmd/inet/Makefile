@@ -40,16 +40,16 @@ netstat: netstat.o $(TINYPRINTF)
 nslookup: nslookup.o
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-ping: ping.o
+ping: ping.o $(TINYPRINTF)
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-ifconfig: ifconfig.o
+ifconfig: ifconfig.o $(TINYPRINTF)
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-tcpdump: tcpdump.o
+tcpdump: tcpdump.o $(TINYPRINTF)
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-traceroute: traceroute.o
+traceroute: traceroute.o $(TINYPRINTF)
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 telnet: telnet.o $(TINYPRINTF)
@@ -58,7 +58,7 @@ telnet: telnet.o $(TINYPRINTF)
 telnetd: telnetd.o telopt.o
 	$(LD) $(LDFLAGS) -maout-heap=256 -maout-stack=1024 -o $@ $^ $(LDLIBS)
 
-curl: curl.o
+curl: curl.o $(TINYPRINTF)
 	$(LD) $(LDFLAGS) -maout-stack=2048 -maout-heap=2048 -o $@ $^ $(LDLIBS)
 
 urlget: urlget.o $(TINYPRINTF)
