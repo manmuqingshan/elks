@@ -418,24 +418,6 @@ static int inet_select(register struct socket *sock, int sel_type)
     return 0;
 }
 
-static int inet_send(struct socket *sock, void *buff, int len, int nonblock,
-                     unsigned int flags)
-{
-    if (flags != 0)
-        return -EINVAL;
-
-    return inet_write(sock, buff, len, nonblock);
-}
-
-static int inet_recv(struct socket *sock, void *buff, int len, int nonblock,
-                     unsigned int flags)
-{
-    if (flags != 0)
-        return -EINVAL;
-
-    return inet_read(sock, buff, len, nonblock);
-}
-
 static int inet_getname(struct socket *sock, struct sockaddr *usockaddr,
         int *usockaddr_len, int peer)
 {
@@ -462,6 +444,26 @@ int not_implemented(void)
     return 0;
 }
 
+#if UNUSED
+static int inet_send(struct socket *sock, void *buff, int len, int nonblock,
+                     unsigned int flags)
+{
+    if (flags != 0)
+        return -EINVAL;
+
+    return inet_write(sock, buff, len, nonblock);
+}
+
+static int inet_recv(struct socket *sock, void *buff, int len, int nonblock,
+                     unsigned int flags)
+{
+    if (flags != 0)
+        return -EINVAL;
+
+    return inet_read(sock, buff, len, nonblock);
+}
+#endif
+
 static struct proto_ops inet_proto_ops = {
     AF_INET,
     inet_create,
@@ -477,8 +479,6 @@ static struct proto_ops inet_proto_ops = {
     inet_select,
     not_implemented,    /* inet_ioctl */
     inet_listen,
-    inet_send,
-    inet_recv,
 };
 
 void inet_proto_init(struct net_proto *pro)
