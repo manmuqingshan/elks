@@ -249,6 +249,20 @@ elksdigger()
     echo "elksdigger build complete"
 }
 
+gem()
+{
+    echo "Building GEM Desktop..."
+    cd $TOPDIR/extapps
+    if [ ! -d Gem-elks ] ; then
+        git clone https://github.com/parabyte/Gem-elks
+    fi
+    cd Gem-elks
+    git pull
+    make -f Makefile.elks ELKS_ROOT=$TOPDIR clean
+    make -f Makefile.elks ELKS_ROOT=$TOPDIR
+    echo "GEM Desktop build complete"
+}
+
 elks_viewer()
 {
     echo "Building elks-viewer..."
@@ -342,6 +356,7 @@ make_all()
     dflat
     elkirc
     elksdigger
+    gem
     if [ -n "$WATCOM" ] ; then
         owc_libc
         owc_elkscmd

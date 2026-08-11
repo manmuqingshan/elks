@@ -45,6 +45,20 @@ microwindows/src/bin/nxselect                       :nanox  :1232c
 microwindows/src/demos/nanox/images/girl1.jpg ::root/girl1.jpg :nanox
 microwindows/src/demos/nanox/images/earth.jpg ::root/earth.jpg :nanox
 dflat/memopad                                       :dflat              :2880k
+Gem-elks/build/bin/gem                              :gem
+Gem-elks/build/bin/gemdesk                          :gem
+Gem-elks/build/bin/gemclock                         :gem
+Gem-elks/build/bin/gemcalc                          :gem
+Gem-elks/build/bin/gemview                          :gem
+Gem-elks/build/bin/gemirc                           :gem
+Gem-elks/assets/lib/gemsys/gem.rsc ::lib/gemsys/gem.rsc	:gem
+Gem-elks/assets/lib/gemsys/desktop.rsc ::lib/gemsys/desktop.rsc	:gem
+Gem-elks/assets/lib/gemsys/desktop.inf ::lib/gemsys/desktop.inf	:gem
+Gem-elks/assets/lib/gemsys/deskhi.icn ::lib/gemsys/deskhi.icn	:gem
+Gem-elks/assets/lib/gemsys/desklo.icn ::lib/gemsys/desklo.icn	:gem
+Gem-elks/assets/lib/gemsys/sysfont.08 ::lib/gemsys/sysfont.08	:gem
+Gem-elks/assets/lib/gemsys/sysfont.14 ::lib/gemsys/sysfont.14	:gem
+Gem-elks/assets/lib/gemsys/sysfont.16 ::lib/gemsys/sysfont.16	:gem
 # sample ELKS OWC/C86 files
 ../elkscmd/basic/basic.os2                          :owc                :2880k
 ../elkscmd/fsck_dos/fsck-dos.os2                    :owc                :2880k
