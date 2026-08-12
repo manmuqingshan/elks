@@ -494,12 +494,16 @@ int do_pasv(int *datafd, int epsv) {
 		perror("PASV socket");
 		return -1;
 	}
-
 	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &i, sizeof(i)) < 0)
 		perror("PASV SO_REUSEADDR");
-	i = SO_LISTEN_BUFSIZ;
-	if (setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &i, sizeof(i)) < 0)
-                perror("PASV SO_RCVBUF");
+	if (setsockopt(fd, SOL_SOCKET, SO_NOBUFFER, NULL, 0) < 0)
+		perror("PASV SO_NOBUFFER");
+#if 1
+    /* test using 2/3 of normal 4390 byte buffer (=MTU-40 = 1460*2) */
+    int size = 2920;
+	if (setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &size, sizeof(size)) < 0)
+		perror("SO_RCVBUF");
+#endif
 
 	pasv.sin_family = AF_INET;
 	pasv.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -700,9 +704,8 @@ int main(int argc, char **argv) {
 		perror("SO_REUSEADDR");
 
 	/* set small listen buffer to save ktcp memory */
-	ret = SO_LISTEN_BUFSIZ;
-	if (setsockopt(listenfd, SOL_SOCKET, SO_RCVBUF, &ret, sizeof(int)) < 0)
-		perror("SO_RCVBUF");
+	if (setsockopt(listenfd, SOL_SOCKET, SO_NOBUFFER, NULL, 0) < 0)
+		perror("SO_NOBUFFER");
 
 	servaddr.sin_family      = AF_INET;
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);

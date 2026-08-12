@@ -820,9 +820,8 @@ int do_active(int cmdfd) {
 	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
 		perror("SO_REUSEADDR");
 
-	i = SO_LISTEN_BUFSIZ;
-	if (setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &i, sizeof(i)) < 0) 
-		perror("SO_RCVBUF");
+	if (setsockopt(fd, SOL_SOCKET, SO_NOBUFFER, NULL, 0) < 0)
+		perror("SO_NOBUFFER");
 
 	bzero(&myaddr, sizeof(myaddr));
 	myaddr.sin_family = AF_INET;
