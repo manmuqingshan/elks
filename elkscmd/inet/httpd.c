@@ -160,9 +160,8 @@ int main(int argc, char **argv)
         errmsg("http: SO_REUSEADDR");
 
     /* set small listen buffer to save ktcp memory */
-    ret = SO_LISTEN_BUFSIZ;
-    if (setsockopt(listen_sock, SOL_SOCKET, SO_RCVBUF, &ret, sizeof(int)) < 0)
-        errmsg("httpd: SO_RCVBUF");
+    if (setsockopt(listen_sock, SOL_SOCKET, SO_NOBUFFER, NULL, 0) < 0)
+        errmsg("httpd: SO_NOBUFFER");
 
     localadr.sin_family = AF_INET;
     localadr.sin_port = htons(DEF_PORT);

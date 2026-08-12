@@ -308,9 +308,8 @@ int main(int argc, char **argv)
         perror("SO_REUSEADDR");
 
     /* set small listen buffer to save ktcp memory */
-    val = SO_LISTEN_BUFSIZ;
-    if (setsockopt(listen_sock, SOL_SOCKET, SO_RCVBUF, &val, sizeof(int)) < 0)
-        perror("SO_RCVBUF");
+    if (setsockopt(listen_sock, SOL_SOCKET, SO_NOBUFFER, NULL, 0) < 0)
+        perror("SO_NOBUFFER");
 
     memset(&localadr, 0, sizeof(localadr));
     localadr.sin_family = AF_INET;

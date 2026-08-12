@@ -67,7 +67,7 @@ static void tcpdev_bind(void)
 {
     struct tdb_bind *db = (struct tdb_bind *)sbuf; /* read from sbuf*/
     struct tcpcb_list_s *n;
-    int size;
+    int size = 0;
     __u16 port;
     struct tdb_bind_ret bind_ret;
 
@@ -76,8 +76,12 @@ static void tcpdev_bind(void)
 	return;
     }
 
-    /* SO_RCVBUF currently only sets listen or connect buffer size, NOT accept size!*/
-    size = db->rcv_bufsiz? db->rcv_bufsiz: CB_NORMAL_BUFSIZ;
+    /*
+     * Use SO_NOBUFFER on listen sockets to save ktcp heap.
+     * Use SO_RCVBUF set connect or accept CB buffer size.
+     */
+    if (!db->no_buffer)
+	size = db->rcv_bufsiz? db->rcv_bufsiz: CB_NORMAL_BUFSIZ;
     n = tcpcb_new(size);
     if (n == NULL) {
 	retval_to_sock(db->sock,-ENOMEM);
@@ -117,6 +121,7 @@ reject:
     }
 
     n->tcpcb.sock = db->sock;
+    n->tcpcb.acc_size = db->rcv_bufsiz;
     if (db->addr.sin_addr.s_addr == htonl(0x7f000001))
         n->tcpcb.localaddr = db->addr.sin_addr.s_addr;
     else

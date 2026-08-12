@@ -47,9 +47,6 @@ static struct proto_ops *find_protocol_family(int family)
 
 static int check_addr_to_kernel(void *uaddr, size_t ulen)
 {
-    if (ulen > MAX_SOCK_ADDR)
-	return -EINVAL;
-
     if (ulen == 0)
 	return 0;
 
@@ -575,6 +572,11 @@ int sys_setsockopt(int fd, int level, int option_name, void *option_value,
 	    return 0;
 	}
 	flags = SF_REUSE_ADDR;
+	break;
+
+    case SO_NOBUFFER:
+	setoption = 1;
+	flags = SF_NOBUF;
 	break;
 
     default:

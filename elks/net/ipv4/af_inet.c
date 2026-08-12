@@ -161,6 +161,7 @@ static int inet_bind(register struct socket *sock, struct sockaddr *addr,
     cmd->cmd = TDC_BIND;
     cmd->sock = sock;
     cmd->reuse_addr = sock->flags & SF_REUSE_ADDR;
+    cmd->no_buffer = sock->flags & SF_NOBUF;
     cmd->rcv_bufsiz = sock->rcv_bufsiz;
     memcpy_fromfs(&cmd->addr, addr, sockaddr_len);
 
