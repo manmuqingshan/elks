@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -491,37 +492,31 @@ static void tcp_last_ack(struct iptcp_s *iptcp, struct tcpcb_s *cb)
 
 /* Prepare and send RST for non-existing connections
  * (typically lingering connections  after a reboot) */
-void tcp_reject(struct iphdr_s *iph) {
-	struct tcpcb_list_s *cbnode;
-	struct tcphdr_s *tcph;
-	struct tcpcb_s *cb = NULL;
-	__u32 seqno;
+void tcp_reject(struct iphdr_s *iph)
+{
+    struct tcphdr_s *tcph;
+    __u32 seqno;
+    struct tcpcb_s cb;
 
-	tcph = (struct tcphdr_s *)(((char *)iph) + 4 * IP_HLEN(iph));
-	seqno = ntohl(tcph->seqnum);
-	debug_tcp("tcp: refusing packet from %s:%u to :%u fl 0x%02x\n",
-	    in_ntoa(iph->saddr), ntohs(tcph->sport), ntohs(tcph->dport), tcph->flags);
+    tcph = (struct tcphdr_s *)(((char *)iph) + 4 * IP_HLEN(iph));
+    seqno = ntohl(tcph->seqnum);
+    debug_tcp("tcp: refusing packet from %s:%u to :%u fl 0x%02x\n",
+        in_ntoa(iph->saddr), ntohs(tcph->sport), ntohs(tcph->dport), tcph->flags);
 
-	/* Dummy up a new control block and send RST to shutdown sender */
-	cbnode = tcpcb_new(1);		/* bufsize = 1, dummy */
-	if (cbnode) {
-	    cb = &cbnode->tcpcb;
-	    cb->state = TS_CLOSED;
-	    cb->localaddr = iph->daddr;
-	    cb->localport = ntohs(tcph->dport);
-	    cb->remaddr = iph->saddr;
-	    cb->remport = ntohs(tcph->sport);
-	    if (tcph->flags & TF_ACK) {
-		cb->flags = TF_RST;
-		cb->send_nxt = ntohl(tcph->acknum);
-	    } else
-		cb->flags = TF_RST|TF_ACK;
-	    cb->rcv_nxt = (tcph->flags & TF_SYN)? seqno+1: seqno;
-	    cb->datalen = 0;
-	    tcp_output(cb);		/* send RST*/
-	    tcpcb_remove(cbnode);	/* deallocate*/
-	}
-	return;
+    /* Use control block on stack in case no memory and send RST to shutdown sender */
+    memset(&cb, 0, sizeof(cb));
+    cb.state = TS_CLOSED;
+    cb.localaddr = iph->daddr;
+    cb.localport = ntohs(tcph->dport);
+    cb.remaddr = iph->saddr;
+    cb.remport = ntohs(tcph->sport);
+    if (tcph->flags & TF_ACK) {
+	cb.flags = TF_RST;
+	cb.send_nxt = ntohl(tcph->acknum);
+    } else
+	cb.flags = TF_RST|TF_ACK;
+    cb.rcv_nxt = (tcph->flags & TF_SYN)? seqno+1: seqno;
+    tcp_output(&cb);             /* send RST, no data, no queing in add_for_retrans */
 }
 
 /* process an incoming TCP packet*/
